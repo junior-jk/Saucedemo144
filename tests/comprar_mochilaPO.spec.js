@@ -3,7 +3,7 @@ const { LoginPage } = require('../pages/LoginPage'); // ref ao arquivo LoginPage
 const { InventoryPage } = require('../pages/InventoryPage'); // ref ao arquivo InventoryPage = require('./pages/InventoryPage');
 const { InventoryItemPage } = require('../pages/InventoryItemPage'); // ref ao arquivo InventoryItemPage = require('./pages/InventoryItemPage');
 
-test('Fluxo de compra da mochila', async ({ page }) => {
+test('Fluxo de compra da mochilaPO', async ({ page }) => {
     const loginPage = new LoginPage(page);
     const inventoryPage = new InventoryPage(page);
     const inventoryItemPage = new InventoryItemPage(page);
