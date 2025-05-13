@@ -1,17 +1,24 @@
-const { test, expect } = require('playwright/test'); // ref ao Playwright
-const { LoginPage } = require('../pages/LoginPage'); // ref ao arquivo LoginPage = require('../pages/LoginPage');
-const { InventoryPage } = require('../pages/InventoryPage'); // ref ao arquivo InventoryPage = require('./pages/InventoryPage');
-const { InventoryItemPage } = require('../pages/InventoryItemPage'); // ref ao arquivo InventoryItemPage = require('./pages/InventoryItemPage');
+const { test, expect } = require('playwright/test')
+const { lerCsv } = require('../utils/lerCsv')
+const { LoginPage } = require('../pages/LoginPage')
+const { InventoryPage } = require('../pages/InventoryPage')
+const { InventoryItemPage } = require('../pages/InventoryItemPage')
 
-test('Fluxo de compra da mochilaPO', async ({ page }) => {
-    const loginPage = new LoginPage(page);
-    const inventoryPage = new InventoryPage(page);
-    const inventoryItemPage = new InventoryItemPage(page);
-    
-    await loginPage.goto('https://www.saucedemo.com/');
-    await loginPage.login('standard_user', 'secret_sauce');
-    await inventoryPage.verificarInvetoryPage();
-    await inventoryPage.clicarMochila();
-    await inventoryItemPage.verificarInventoryItemPage();
-    await inventoryItemPage.verificarTituloPrecoDoProduto('Sauce Labs Backpack', '$29.99');
-})
+const registros = lerCsv('C:/Iterasys/Saucedemo144/fixtures/csv/massaProdutos.csv')
+console.log(registros)
+
+
+for (const { user, password, sku, titulo_produto, preco_produto } of registros) {
+    test(`Fluxo de compra da ${titulo_produto} PO`, async ({ page }) => {
+        const loginPage = new LoginPage(page)
+        const inventoryPage = new InventoryPage(page)
+        const inventoryItemPage = new InventoryItemPage(page)
+
+        await loginPage.goto('https://www.saucedemo.com')
+        await loginPage.login(user, password)
+        await inventoryPage.verificarInventoryPage()
+        await inventoryPage.clicarProduto(sku)
+        await inventoryItemPage.verificarInventoryItemPage()
+        await inventoryItemPage.verificarTituloPrecoDoProduto(titulo_produto, preco_produto)
+    }) 
+}
