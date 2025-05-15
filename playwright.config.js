@@ -1,6 +1,6 @@
-const { defineConfig } = require('playwright/test');
+import { defineConfig } from 'playwright/test';
 
-module.exports = defineConfig({
+export default defineConfig({
   use: {
     channel: 'chrome', // Usa o navegador Google Chrome estável
     headless: false,
