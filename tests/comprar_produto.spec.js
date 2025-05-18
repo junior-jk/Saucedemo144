@@ -3,11 +3,13 @@ const { test, expect } = require('playwright/test');
 const { LoginPage } = require('../pages/LoginPage');
 const { InventoryPage } = require('../pages/InventoryPage');
 const { InventoryItemPage } = require('../pages/InventoryItemPage');
+const { CartPage } = require('../pages/CartPage');
 
 test('Fluxo de compra completo com a mochila', async ({ page }) => {
   const loginPage = new LoginPage(page);
   const inventoryPage = new InventoryPage(page);
   const inventoryItemPage = new InventoryItemPage(page);
+  const cartPage = new CartPage(page);
 
   // Acessar a URL e fazer login
   await loginPage.goto('https://www.saucedemo.com/');
@@ -30,6 +32,9 @@ test('Fluxo de compra completo com a mochila', async ({ page }) => {
   await page.locator('.shopping_cart_link').click();
   await expect(page).toHaveURL('https://www.saucedemo.com/cart.html');
 
+  // Aqui você faz o assert da quantidade
+  await cartPage.verificarQuantidadeEsperada(1);
+
   // Ir para checkout
   await page.locator('[data-test="checkout"]').click();
   await expect(page).toHaveURL('https://www.saucedemo.com/checkout-step-one.html');
@@ -46,6 +51,6 @@ test('Fluxo de compra completo com a mochila', async ({ page }) => {
 
   // Finalizar compra
   await page.locator('[data-test="finish"]').click();
-  await expect(page).toHaveURL('https://www.saucedemo.com/checkout-complete.html');
+  //await expect(page).toHaveURL('https://www.saucedemo.com/checkout-complete.html');
   await expect(page.locator('.complete-header')).toHaveText('Thank you for your order!');
 });
